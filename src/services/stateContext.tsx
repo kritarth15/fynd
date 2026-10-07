@@ -78,23 +78,10 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const { user: authUser } = useAuth();
   const [currentUser, setCurrentUser] = useState<User>(CURRENT_USER);
 
-  // Synchronize authenticated Supabase user profile with application state
+  // Synchronize authenticated user profile with application state
   useEffect(() => {
     if (authUser) {
-      const email = authUser.email || CURRENT_USER.email;
-      const metadata = authUser.user_metadata || {};
-      const fallbackName = email.split('@')[0];
-      const capitalized = fallbackName ? fallbackName.charAt(0).toUpperCase() + fallbackName.slice(1) : 'Student';
-      const displayName = metadata.displayName || metadata.full_name || capitalized;
-
-      setCurrentUser((prev) => ({
-        ...prev,
-        uid: authUser.id,
-        email: email,
-        displayName: displayName,
-        department: metadata.department || prev.department,
-        studentId: metadata.studentId || prev.studentId,
-      }));
+      setCurrentUser(authUser);
     }
   }, [authUser]);
 
